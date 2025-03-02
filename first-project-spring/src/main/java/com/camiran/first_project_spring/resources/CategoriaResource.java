@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.camiran.first_project_spring.domain.Categoria;
 import com.camiran.first_project_spring.services.CategoriaService;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
