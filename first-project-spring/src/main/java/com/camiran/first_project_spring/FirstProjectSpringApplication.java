@@ -1,15 +1,36 @@
 package com.camiran.first_project_spring;
 
+import com.camiran.first_project_spring.domain.Categoria;
+import com.camiran.first_project_spring.repositories.CategoriaRepository;
+
+
+import java.util.Arrays;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 @SpringBootApplication
 @EntityScan(basePackages = "com.camiran.first_project_spring.domain")
-public class FirstProjectSpringApplication {
+public class FirstProjectSpringApplication implements CommandLineRunner {
+
+	@Autowired
+	private CategoriaRepository categoriaRepository;
 
 	public static void main(String[] args) {
 		SpringApplication.run(FirstProjectSpringApplication.class, args);
+	}
+
+	@Override
+	public void run(String... args) throws Exception {
+		
+		Categoria cat1 = new Categoria(null, "Informática");
+		Categoria cat2 = new Categoria(null, "Escritório");
+
+		categoriaRepository.saveAll(Arrays.asList(cat1, cat2));
+
 	}
 
 }
