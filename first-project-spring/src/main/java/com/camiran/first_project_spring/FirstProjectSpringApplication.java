@@ -4,17 +4,24 @@ import com.camiran.first_project_spring.domain.Categoria;
 import com.camiran.first_project_spring.domain.Cidade;
 import com.camiran.first_project_spring.domain.Cliente;
 import com.camiran.first_project_spring.domain.Estado;
+import com.camiran.first_project_spring.domain.Pagamento;
+import com.camiran.first_project_spring.domain.PagamentoComBoleto;
+import com.camiran.first_project_spring.domain.PagamentoComCartao;
 import com.camiran.first_project_spring.domain.Produto;
 import com.camiran.first_project_spring.repositories.CategoriaRepository;
 import com.camiran.first_project_spring.repositories.ProdutoRepository;
 import com.camiran.first_project_spring.repositories.EstadoRepository;
 import com.camiran.first_project_spring.repositories.CidadeRepository;
+import com.camiran.first_project_spring.domain.enums.EstadoPagamento;
 import com.camiran.first_project_spring.domain.enums.TipoCliente;
 import com.camiran.first_project_spring.domain.Endereco;
 import com.camiran.first_project_spring.repositories.ClienteRepository;
 import com.camiran.first_project_spring.repositories.EnderecoRepository;
+import com.camiran.first_project_spring.domain.Pedido;
+import com.camiran.first_project_spring.repositories.PedidoRepository;
+import com.camiran.first_project_spring.repositories.PagamentoRepository;
 
-
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +46,11 @@ public class FirstProjectSpringApplication implements CommandLineRunner {
 	private ClienteRepository clienteRepository;
 	@Autowired
 	private EnderecoRepository enderecoRepository;
+	@Autowired
+	private PedidoRepository pedidoRepository;
+	@Autowired
+	private PagamentoRepository pagamentoRepository;
+
 
 	public static void main(String[] args) {
 		SpringApplication.run(FirstProjectSpringApplication.class, args);
@@ -91,6 +103,20 @@ public class FirstProjectSpringApplication implements CommandLineRunner {
 		clienteRepository.saveAll(Arrays.asList(cli1));
 		enderecoRepository.saveAll(Arrays.asList(e1, e2));
 		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
+
+		Pedido ped1 = new Pedido(null, sdf.parse("28/07/2022 15:30"), cli1, e1);
+		Pedido ped2 = new Pedido(null, sdf.parse("30/07/2022 10:00"), cli1, e2);
+
+		Pagamento pagto1 = new PagamentoComCartao(null,EstadoPagamento.QUITADO, ped1, 7);
+		ped1.setPagamento(pagto1);
+		Pagamento pagto2 = new PagamentoComBoleto(null, EstadoPagamento.PENDENTE, ped2, sdf.parse("30/07/2022 00:00"), null);
+		ped2.setPagamento(pagto2);
+
+		cli1.getPedidos().addAll(Arrays.asList(ped1, ped2));
+
+		pedidoRepository.saveAll(Arrays.asList(ped1, ped2));
+		pagamentoRepository.saveAll(Arrays.asList(pagto1, pagto2));
 
 	}
 
