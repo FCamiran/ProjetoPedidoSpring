@@ -1,8 +1,7 @@
 package com.camiran.first_project_spring.domain;
 
 import java.util.List;
-
-import org.hibernate.annotations.ManyToAny;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -11,10 +10,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.JoinColumn;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 
 @Entity
@@ -28,16 +30,29 @@ public class Produto implements Serializable{
     private Double preco;
 
     @JsonBackReference
-    @ManyToAny
+    @ManyToMany
     @JoinTable(name = "PRODUTO_CATEGORIA",
-    joinColumns = @JoinColumn(name = "produto_id"),
-    inverseJoinColumns = @JoinColumn(name = "categoria_id"))
+        joinColumns = @JoinColumn(name = "produto_id"),
+        inverseJoinColumns = @JoinColumn(name = "categoria_id")
+    )
 
     private List<Categoria> categorias = new ArrayList<>();
 
+    @OneToMany(mappedBy = "id.produto")
+    private Set<ItemPedido> itens = new HashSet<>();
+    
     public Produto() {
     }
  
+    public List<Pedido> getPedidos(){
+        List<Pedido> lista = new ArrayList<>();
+        for(ItemPedido x : itens){
+            lista.add(x.getPedido());
+        } 
+        return lista;
+    }
+
+    
     public Produto(Integer id, String nome, Double preco) {
         super();
         this.id = id;
@@ -76,6 +91,15 @@ public class Produto implements Serializable{
     public void setCategorias(List<Categoria> categorias) {
         this.categorias = categorias;
     }
+
+    public Set<ItemPedido> getItens() {
+        return itens;
+    }
+
+    public void setItens(Set<ItemPedido> itens) {
+        this.itens = itens;
+    }
+
 
     @Override
     public int hashCode() {
