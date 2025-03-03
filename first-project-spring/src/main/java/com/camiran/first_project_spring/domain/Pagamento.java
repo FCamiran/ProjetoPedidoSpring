@@ -3,7 +3,7 @@ package com.camiran.first_project_spring.domain;
 import java.io.Serializable;
 
 import com.camiran.first_project_spring.domain.enums.EstadoPagamento;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -22,7 +22,7 @@ public abstract class Pagamento implements Serializable{
     private Integer id;
     private Integer estado;
     
-    @JsonBackReference
+    @JsonIgnore
     @OneToOne
     @JoinColumn(name = "pedido_id")
     @MapsId
